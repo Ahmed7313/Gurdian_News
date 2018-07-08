@@ -1,9 +1,7 @@
 package com.example.android.gurdian_news_app;
 
-import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -158,7 +156,7 @@ public class QueryUtils {
                    author = tagsObject.optString("webTitle");
                 }
 
-                    // Create a new {@link News} object with the magnitude, location, time,
+                // Create a new {@link News} object with the magnitude, location, time,
                 // and url from the JSON response.
                 News news = new News(sectionName, webPublicationDate, webTitle, webUrl,section, author);
 
