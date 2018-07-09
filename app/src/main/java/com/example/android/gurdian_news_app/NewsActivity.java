@@ -26,7 +26,8 @@ import java.util.List;
 
 public class NewsActivity extends AppCompatActivity implements LoaderCallbacks<List<News>> {
 
-    private static final String GUARDIANAPIS_REQUEST_URL = "http://content.guardianapis.com/search";
+    private static final String URL_REQUEST = "http://content.guardianapis.com/search?";
+    private static final String AND_OPERATOR = "%20AND%20";
     private NewsAdapter mAdapter;
     String url = "section=politics&show-tags=contributor&show-fields=thumbnail&api-key=c72fedd3-c805-4cf1-ab05-f02f8d8b9a6a";
     /**
@@ -47,9 +48,9 @@ public class NewsActivity extends AppCompatActivity implements LoaderCallbacks<L
         // Get a reference to the LoaderManager, in order to interact with loaders.
         android.app.LoaderManager loaderManager = getLoaderManager();
         // Find a reference to the {@link ListView} in the layout
-        ListView newsListView = (ListView) findViewById(R.id.list);
+        ListView newsListView = findViewById(R.id.list);
 
-        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        mEmptyStateTextView = findViewById(R.id.empty_view);
         //get a reference to ConnectivityManager to check the internet connectivity state
         ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         // Get details on the currently active default data network
@@ -58,7 +59,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         newsListView.setEmptyView(mEmptyStateTextView);
 
-        spinner = (ProgressBar) findViewById(R.id.progressBar);
+        spinner = findViewById(R.id.progressBar);
         //make the spinner visible to the user until the app fetch the data from USGS servers
         spinner.setVisibility(View.VISIBLE);
 
@@ -72,7 +73,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderCallbacks<L
             // First, hide loading indicator so error message will be visible
             ProgressBar loadingIndicator = findViewById(R.id.progressBar);
             loadingIndicator.setVisibility(View.GONE);
-            mNoInternetConnection = (TextView) findViewById(R.id.no_internet_connection);
+            mNoInternetConnection = findViewById(R.id.no_internet_connection);
             // Update empty state with no connection error message
             mNoInternetConnection.setText(R.string.no_internet_connection);
         }
@@ -121,37 +122,54 @@ public class NewsActivity extends AppCompatActivity implements LoaderCallbacks<L
     }
 
     @Override
-    // onCreateLoader instantiates and returns a new Loader for the given ID
-    public Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
-        // Create a new loader for the given URL
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
-        String numArticles = sharedPrefs.getString(
-                getString(R.string.settings_num_shown_key),
-                getString(R.string.settings_num_shown_default));
-        // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
-        final String FIXED_QUERY = "android AND ";
-        String queryArticles = sharedPrefs.getString(
-                getString(R.string.settings_query_key),
-                getString(R.string.settings_query_default));
-        // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
-        String orderBy = sharedPrefs.getString(
-                getString(R.string.settings_order_by_key),
-                getString(R.string.settings_order_by_default)
-        );
-        // parse breaks apart the URI string that's passed into its parameter
-        Uri baseUri = Uri.parse(GUARDIANAPIS_REQUEST_URL);
-        // buildUpon prepares the baseUri that we just parsed so we can add query parameters to it
+    public Loader<List<News>> onCreateLoader(int id, Bundle args) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String numberOfNews = sharedPreferences.getString(getString(R.string.settings_number_of_news_key), getString(R.string.settings_number_of_news_default));
+        String orderBy = sharedPreferences.getString(getString(R.string.settings_order_by_key), getString(R.string.settings_order_by_default));
+        Boolean android = sharedPreferences.getBoolean(getString(R.string.settings_theme_android_key), true);
+        Boolean ios = sharedPreferences.getBoolean(getString(R.string.settings_theme_ios_key), false);
+        Boolean phones = sharedPreferences.getBoolean(getString(R.string.settings_theme_phones_key), false);
+        Boolean ai = sharedPreferences.getBoolean(getString(R.string.settings_theme_ai_key), false);
+        Boolean gadgets = sharedPreferences.getBoolean(getString(R.string.settings_theme_gadgets_key), false);
+        Boolean games = sharedPreferences.getBoolean(getString(R.string.settings_theme_games_key), false);
+
+        StringBuilder themes = new StringBuilder();
+        if (android) {
+            themes.append(getString(R.string.settings_theme_android_key) + AND_OPERATOR);
+        }
+        if (ios) {
+            themes.append(getString(R.string.settings_theme_ios_key) + AND_OPERATOR);
+        }
+        if (phones) {
+            themes.append(getString(R.string.settings_theme_phones_key) + AND_OPERATOR);
+        }
+        if (ai) {
+            themes.append(getString(R.string.settings_theme_ai_key) + AND_OPERATOR);
+        }
+        if (gadgets) {
+            themes.append(getString(R.string.settings_theme_gadgets_key) + AND_OPERATOR);
+        }
+        if (games) {
+            themes.append(getString(R.string.settings_theme_games_key) + AND_OPERATOR);
+        }
+
+        if (themes.toString().endsWith(AND_OPERATOR)) {
+            themes.delete(themes.toString().length() - AND_OPERATOR.length(), themes.toString().length());
+            Log.i("ArticleActivity", themes.toString());
+        }
+
+        Uri baseUri = Uri.parse(URL_REQUEST);
+
         Uri.Builder uriBuilder = baseUri.buildUpon();
-        // Append query parameter and its value. For example, the `show-tags=contributor`
-        uriBuilder.appendQueryParameter("q", FIXED_QUERY.concat(queryArticles));
+        uriBuilder.appendQueryParameter("q", themes.toString());
+        uriBuilder.appendQueryParameter("section", "technology");
+        uriBuilder.appendQueryParameter("show-fields", "thumbnail");
         uriBuilder.appendQueryParameter("show-tags", "contributor");
-        uriBuilder.appendQueryParameter("page-size", numArticles);
+        uriBuilder.appendQueryParameter("page-size", numberOfNews);
         uriBuilder.appendQueryParameter("order-by", orderBy);
-        uriBuilder.appendQueryParameter("api-key", "test");
-        //display Log.v with the uri created
-        Log.v("MainActivity", "uri= " + uriBuilder.toString());
-        // Return the completed uri
+        uriBuilder.appendQueryParameter("api-key", "93fdb283-039e-4d6f-880b-826e2b09337b");
+        Log.i("ArticleActivity", uriBuilder.toString());
         return new NewsLoader(this, uriBuilder.toString());
     }
     @Override

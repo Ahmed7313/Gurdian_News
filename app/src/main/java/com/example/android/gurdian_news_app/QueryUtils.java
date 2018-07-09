@@ -147,6 +147,11 @@ public class QueryUtils {
 
                 String section = resultsArticle.getString("sectionName");
 
+                JSONObject fields = resultsArticle.optJSONObject("fields");
+                String imageUrl = null;
+                if (fields != null) {
+                    imageUrl = fields.optString("thumbnail");
+                }
                 // Geitting the author name from tags array
                 JSONArray tags = resultsArticle.getJSONArray("tags");
                 String author = "author name not found";
@@ -158,7 +163,7 @@ public class QueryUtils {
 
                 // Create a new {@link News} object with the magnitude, location, time,
                 // and url from the JSON response.
-                News news = new News(sectionName, webPublicationDate, webTitle, webUrl,section, author);
+                News news = new News(sectionName, imageUrl, webPublicationDate, webTitle, webUrl, section, author);
 
                 // Add the new {@link News} to the list of News.
                 newsList.add(news);

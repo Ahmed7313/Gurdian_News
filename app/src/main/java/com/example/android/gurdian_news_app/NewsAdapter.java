@@ -7,16 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter <News>  {
 
-    private static final String LOCATION_SEPARATOR = "T";
 
     public NewsAdapter(@NonNull Context context, @NonNull List<News> newsData) {
         super(context, 0, newsData);
@@ -25,57 +24,41 @@ public class NewsAdapter extends ArrayAdapter <News>  {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        //get the nwes object at postion on the adapter
-        News currentNews = getItem(position);
-        View listItemView = convertView;
-        if (listItemView == null){
-            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.adpetr_body,parent,false);
+        News currentnews = getItem(position);
+
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adpetr_body, parent, false);
         }
 
-        TextView sectionName = (TextView)listItemView.findViewById(R.id.sectionName);
-        sectionName.setText(currentNews.getSectionName());
+        ImageView articleImageView = convertView.findViewById(R.id.article_image_view);
+        String imageUrl = currentnews.getImageUrl();
 
-        String webPublicationDate = currentNews.getWebPublicationDate();
-        String date = "";
-        String time = "";
-
-        if (webPublicationDate.contains(LOCATION_SEPARATOR)) {
-            String[] parts = webPublicationDate.split(LOCATION_SEPARATOR);
-            date = parts[0] + LOCATION_SEPARATOR;
-            time = parts[1];
+        if (imageUrl != null) {
+            Picasso.get().load(imageUrl).into(articleImageView);
+        } else {
+            Picasso.get().load(R.drawable.default_background).into(articleImageView);
         }
 
+        TextView sectionTextView = convertView.findViewById(R.id.article_section_text_view);
+        sectionTextView.setText(currentnews.getSection());
 
-        TextView dateOfNews = (TextView)listItemView.findViewById(R.id.date);
-        String dateString = date;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy");
-        Date dateObject = new Date();
-        try {
-            dateObject = dateFormat.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        TextView articleAuthorTextView = convertView.findViewById(R.id.article_author_text_view);
+        String author = currentnews.getAuthorName();
+
+        if (author != null) {
+            articleAuthorTextView.setText(author);
+        } else {
+            articleAuthorTextView.setVisibility(View.GONE);
         }
-        String formattedDate = dateFormat.format(dateObject);
-        dateOfNews.setText(formattedDate);
 
-        TextView timeOfNews = (TextView)listItemView.findViewById(R.id.time);
-        String TimeString = time;
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
-        Date timeObject = new Date();
-        try {
-            timeObject = timeFormat.parse(TimeString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        String formattedTime = timeFormat.format(timeObject);
-        timeOfNews.setText(formattedTime);
+        TextView articleTitleTextView = convertView.findViewById(R.id.article_title_text_view);
+        articleTitleTextView.setText(currentnews.getWebTitle());
 
-        TextView mainTitle = (TextView) listItemView.findViewById(R.id.news_title);
-        mainTitle.setText(currentNews.getWebTitle());
+        TextView articleDateTextView = convertView.findViewById(R.id.article_date_text_view);
+        articleDateTextView.setText(currentnews.getFormatedDate());
 
-        TextView author = (TextView) listItemView.findViewById(R.id.author_name);
-        author.setText(currentNews.getAuthorName());
-        return listItemView;
+        return convertView;
+
     }
 
 }
