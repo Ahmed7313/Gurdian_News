@@ -29,7 +29,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderCallbacks<L
     private static final String URL_REQUEST = "http://content.guardianapis.com/search?";
     private static final String AND_OPERATOR = "%20AND%20";
     private NewsAdapter mAdapter;
-    String url = "section=politics&show-tags=contributor&show-fields=thumbnail&api-key=c72fedd3-c805-4cf1-ab05-f02f8d8b9a6a";
     /**
      * Constant value for the News loader ID. We can choose any integer.
      * This really only comes into play if you're using multiple loaders.
@@ -168,7 +167,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderCallbacks<L
         uriBuilder.appendQueryParameter("show-tags", "contributor");
         uriBuilder.appendQueryParameter("page-size", numberOfNews);
         uriBuilder.appendQueryParameter("order-by", orderBy);
-        uriBuilder.appendQueryParameter("api-key", "93fdb283-039e-4d6f-880b-826e2b09337b");
+        uriBuilder.appendQueryParameter("api-key", "c72fedd3-c805-4cf1-ab05-f02f8d8b9a6a");
         Log.i("ArticleActivity", uriBuilder.toString());
         return new NewsLoader(this, uriBuilder.toString());
     }
