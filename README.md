@@ -32,10 +32,10 @@ Its also includes a preference sitting layout that allows the user to choose the
 
 
 
- |    **Method name**            | Method description           |
+ |    **Method name**            | Method description                          |
 |----------------|-------------------------------|-----------------------------|
 |fetchDataFromNewsURl|`'Its takes the String URL and fetch all the data from it.'`|       
-|createURL	          |`"create the url object"`  |
+|createURL	          |`create the url object`  |
 |makeHTTPrequist          |`Its start the HTTP requist, open the connection, readFrom the stream.`|
 |readFromStream | ` read the stream and buffer it ` |
 | extractFeatureFromJson| `Parse the JSON and insert it into readable data`|
