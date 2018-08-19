@@ -30,18 +30,13 @@ Its also includes a preference sitting layout that allows the user to choose the
  
  2. **QueryUtils class that include these methodes:**
 
-
-
- |    **Method name**            | Method description                         
-|----------------|-------------------------------|-----------------------------
-|fetchDataFromNewsURl|`'Its takes the String URL and fetch all the data from it.'`      
-|createURL	          |`create the url object`  |
-|makeHTTPrequist          |`Its start the HTTP requist, open the connection, readFrom the stream.`
-|readFromStream | ` read the stream and buffer it ` |
-| extractFeatureFromJson| `Parse the JSON and insert it into readable data`
-
-
-
+|Method name  | Method description |
+|--|--|
+| fetchDataFromNewsURl | Its takes the String URL and fetch all the data from it. |
+|createURL|create the url object|
+|makeHTTPrequist|Its start the HTTP requist, open the connection, readFrom the stream.|
+|readFromStream|` `read the stream and buffer it|
+|extractFeatureFromJson|Parse the JSON and insert it into readable data|
 
  3. **Handle Exceptions**
 
@@ -72,3 +67,5 @@ Its also includes a preference sitting layout that allows the user to choose the
  16. **SimpleDateFormat**
 
  17. **Date fromISO8601UTC**
+
+ 
