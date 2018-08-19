@@ -10,6 +10,9 @@ Its also includes a preference sitting layout that allows the user to choose the
 
 **This is how the App looks like:**
 
+
+<a href="https://gfycat.com/gifs/detail/TerribleDesertedAmphiuma"><img src="https://thumbs.gfycat.com/TerribleDesertedAmphiuma-size_restricted.gif" title="made at imgflip.com"/></a>
+
 # The goal of this project was to learn:
 
 -   Connecting to an API
